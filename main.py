@@ -45,6 +45,16 @@ def mover_rotores(posiciones_actuales, rotores): #Mueve los rotores
     return posiciones_actuales
 
 
+def formatear_grupos(texto): #Divide el texto de 5 en 5
+    resultado = ""
+    for i in range(0, len(texto), 5): #Del texto se separan cada 5 letras
+        if i > 0:
+            resultado += " "
+        resultado += texto[i:i+5]
+    return resultado
+
+
+
 a=1
 
 
