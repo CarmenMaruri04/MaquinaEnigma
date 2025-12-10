@@ -1,12 +1,27 @@
+
+def leer_rotor(nombre_archivo): #Funcion para leer rotor desde un archivo
+    try: #Try por si no encuentra el archivo
+        with open(nombre_archivo, "r") as f:
+            lineas = f.readlines()
+        conexiones = lineas[0].strip().upper() 
+        punto_avance = "Z"  #Z es el valor por defecto
+        if len(lineas) > 1:
+            punto_avance = lineas[1].strip().upper()
+        return conexiones, punto_avance
+    except FileNotFoundError: #Error por si no encuentra el archivo
+        print(f"Error: Archivo {nombre_archivo} no encontrado")
+        #Si no hay archivo, cada letra se transforma en ella misma (mapeo)
+        return "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "Z"
+
 def main(): #Menu principal
-    archivos_rueda = ["Rotor1.txt", "Rotor2.txt", "Rotor3.txt"] #3txt creados (1, 2, 3)
+    archivos_rotor = ["Rotor1.txt", "Rotor2.txt", "Rotor3.txt"] #3txt creados (1, 2, 3)
     configuraciones_ejemplo = [
         "EKMFLGDQVZNTOWYHXUSPAIBRCJ\nG",  #Rotor 1 
         "AJDKSIRUXBLHWTMCQGZNPYFVOE\nL",  #Rotor 2 
         "BDFHJLCPRTXVZNYEIWGAKMUSQO\nC"   #Rotor 3 
     ]
     
-    for i, archivo in enumerate(archivos_rueda):
+    for i, archivo in enumerate(archivos_rotor):
         try: #Por si los rotores fallan
             with open(archivo, "r") as f:
                 pass  #Verifica que existe
@@ -26,7 +41,16 @@ def main(): #Menu principal
         
         if opcion == "1":
             try: #Falta opcion 1 de cifrar un mensaje dado por el user :)
-                a=1
+                 r1 = leer_rotor("Rotor1.txt")
+                 r2 = leer_rotor("Rotor2.txt")
+                 r3 = leer_rotor("Rotor3.txt")
+                 ruedas = [r1, r2, r3]  # Orden: [derecho, medio, izquierdo]
+                 clave = input("Posiciones iniciales (3 letras, ej ABC): ").upper()
+                 if len(clave) != 3 or not all(letra in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" for letra in clave):
+                     print("Error! La clave debe tener 3 letras (ej: ABC)")
+                     print()
+                     continue
+
             except Exception as e:#Si algo no funciona en vez de que se rompa pues sale esto:
                 print(f"Error! Algo salio mal: {e}")
                 print("")
