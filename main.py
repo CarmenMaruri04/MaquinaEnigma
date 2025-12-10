@@ -22,8 +22,7 @@ def cifrar_letra(letra, mapeo, posicion):#Funcion para cifrar letra
     return abecedario[indice_salida]
 
 
-
-def descifrar_letra(letra, mapeo, posicion): #Función para descifrar la letra 
+def descifrar_letra(letra, mapeo, posicion): #Funciï¿½n para descifrar la letra 
     abecedario = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     indice = (abecedario.index(letra) + posicion) % 26
     inverso = [""] * 26  #Realizar el mapeo inverso (es decir, si A->E, entonces E->A  ^^)
@@ -35,6 +34,20 @@ def descifrar_letra(letra, mapeo, posicion): #Función para descifrar la letra
     return abecedario[indice_salida]
 
 
+def mover_rotores(posiciones_actuales, rotores): #Mueve los rotores
+    posiciones_actuales[0] = (posiciones_actuales[0] + 1) % 26 #Rotor 1 avanza 1 posicion
+    if rotores[0][1] == "Z": #Si es Z no se mueve a los otros rotores :3
+        return posiciones_actuales
+    if chr(posiciones_actuales[0] + 65) == rotores[0][1]: #Cunado rotor1 llega mueve rotor2
+        posiciones_actuales[1] = (posiciones_actuales[1] + 1) % 26
+        if chr(posiciones_actuales[1] + 65) == rotores[1][1]: #Cuando rotor2 llega mueve rotor3
+            posiciones_actuales[2] = (posiciones_actuales[2] + 1) % 26
+    return posiciones_actuales
+
+
+a=1
+
+
 def main(): #Menu principal
     archivos_rotor = ["Rotor1.txt", "Rotor2.txt", "Rotor3.txt"] #3txt creados (1, 2, 3)
     configuraciones_ejemplo = [
@@ -42,7 +55,7 @@ def main(): #Menu principal
         "AJDKSIRUXBLHWTMCQGZNPYFVOE\nL",  #Rotor 2 
         "BDFHJLCPRTXVZNYEIWGAKMUSQO\nC"   #Rotor 3 
     ]
-    
+
     for i, archivo in enumerate(archivos_rotor):
         try: #Por si los rotores fallan
             with open(archivo, "r") as f:
