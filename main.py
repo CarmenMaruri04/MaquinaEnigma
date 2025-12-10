@@ -60,7 +60,7 @@ def cifrar_texto(texto, rotores, posiciones_iniciales): #Funcion para cifrar el 
     posiciones = posiciones_iniciales.copy() #Se hace una copia para no perder las posiciones iniciales
     for letra in texto:
         if letra in abecedario:
-            posiciones = mover_rotores(posiciones, rotores) #Se mueven las ruedas antes de cifrar la letra
+            posiciones = mover_rotores(posiciones, rotores) #Se mueven los rotores antes de cifrar la letra
             x = cifrar_letra(letra, rotores[0][0], posiciones[0])  #Rotor1
             x = cifrar_letra(x, rotores[1][0], posiciones[1])      #Rotor2
             x = cifrar_letra(x, rotores[2][0], posiciones[2])      #Rotor3
@@ -95,7 +95,6 @@ def main(): #Menu principal
         "AJDKSIRUXBLHWTMCQGZNPYFVOE\nL",  #Rotor2 
         "BDFHJLCPRTXVZNYEIWGAKMUSQO\nC"   #Rotor3 
     ]
-
     for i, archivo in enumerate(archivos_rotor):
         try: #Por si los rotores fallan
             with open(archivo, "r") as f:
@@ -104,48 +103,96 @@ def main(): #Menu principal
             with open(archivo, "w") as f:
                 f.write(configuraciones_ejemplo[i])
             print(f"Creado archivo {archivo} con configuracion por defecto")
-    
     while True: #Lo primero que se ve
-        print("\n---- ENIGMA ----")
-        print("1. Xifrar missatge")
-        print("2. Desxifrar missatge")
-        print("3. Editar rotors")
-        print("4. Sortir")
-        opcion = input("> ")#Pongo esto q al profe le gusto :)
-        print("")
-        
-        if opcion == "1":
-            try: #Falta opcion 1 de cifrar un mensaje dado por el user :)
+         print("\n---- ENIGMA ----")
+         print("1. Xifrar missatge")
+         print("2. Desxifrar missatge")
+         print("3. Editar rotors")
+         print("4. Sortir")
+         opcion = input("> ")#Pongo esto q al profe le gusto :)
+         print("")
+         if opcion == "1":
+             try: 
                  r1 = leer_rotor("Rotor1.txt")
                  r2 = leer_rotor("Rotor2.txt")
                  r3 = leer_rotor("Rotor3.txt")
-                 ruedas = [r1, r2, r3]  # Orden: [derecho, medio, izquierdo]
+                 rotores = [r1, r2, r3]  #Rotores del 1 al 3
                  clave = input("Posiciones iniciales (3 letras, ej ABC): ").upper()
                  if len(clave) != 3 or not all(letra in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" for letra in clave):
                      print("Error! La clave debe tener 3 letras (ej: ABC)")
                      print()
+                     continue   
+                 posiciones = [ord(clave[0]) - 65, ord(clave[1]) - 65, ord(clave[2]) - 65] #Convierte letras a numeros
+                 mensaje = input("Escribe tu mensaje: ").upper()
+                 if not mensaje:
+                     print("Error! El mensaje no puede estar vacio")
+                     print()
                      continue
-
-            except Exception as e:#Si algo no funciona en vez de que se rompa pues sale esto:
-                print(f"Error! Algo salio mal: {e}")
-                print("")
-            
-        elif opcion == "2":
-            try: #Falta opcion 2 de descifrar el mensaje dado por el user :)
-                a=1
-            except Exception as e:#Mas de lo mismo, si se rompe sale esto:
-                print(f"Error! Algo salio mal durante el descifrado: {e}")
-                print("")
+                 mensaje_limpio = ''.join(c for c in mensaje if c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ") #Solo usa letras de la A a la Z (ignora espacios y otros)
+                 if not mensaje_limpio:
+                     print("Error! El mensaje debe contener al menos una letra A-Z")
+                     print()
+                     continue
+                 print(f"Mensaje a cifrar: {mensaje_limpio}")
+                 print(f"Posiciones usadas: {clave}")
+                 print()
+                 mensaje_secreto = cifrar_texto(mensaje_limpio, rotores, posiciones)
+                 mensaje_formateado = formatear_grupos(mensaje_secreto) #Se formatea en grupos de 5
+                 with open("xifrat.txt", "w") as f:  #Guarda el mensaje
+                     f.write(mensaje_formateado)
+                 num_letras = len(mensaje_secreto)
+                 num_grupos = (num_letras + 4) // 5
+                 print(f"[OK] Missatge xifrat a 'xifrat.txt' ({num_letras} lletres, {num_grupos} grups de 5)")
+                 print(f"Text xifrat: {mensaje_formateado}")
+                 print()
+             except Exception as e: #Si algo no funciona en vez de que se rompa pues sale esto:
+                 print(f"Ups! Algo salio mal: {e}")
+                 print()
+         elif opcion == "2":
+             try:
+                 r1 = leer_rotor("Rotor1.txt")
+                 r2 = leer_rotor("Rotor2.txt")
+                 r3 = leer_rotor("Rotor3.txt")
+                 rotores = [r1, r2, r3]  #Rotores del 1 al 3
+                 clave = input("Posiciones iniciales (mismas que al cifrar, ej ABC): ").upper() #Se pide la clave para poder descifrar el mensaje
+                 if len(clave) != 3 or not all(letra in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" for letra in clave):
+                     print("Error! La clave debe tener 3 letras (ej: ABC)")
+                     print()
+                     continue
+                 posiciones = [ord(clave[0]) - 65, ord(clave[1]) - 65, ord(clave[2]) - 65]
+                 try: #Con la existencia del txt
+                     with open("xifrat.txt", "r") as f:
+                         texto_secreto = f.read().strip()
+                     if not texto_secreto:
+                         print("Error! El archivo esta vacio")
+                         print()
+                         continue
+                     print(f"Texto xifrat: {texto_secreto}")
+                     print(f"Posiciones usadas: {clave}")
+                     print()
+                     mensaje_normal = descifrar_texto(texto_secreto, rotores, posiciones) #Descifra el mensaje
+                     with open("desxifrat.txt", "w") as f:
+                         f.write(mensaje_normal) #Guarda el mensaje normal
+                     print(f"[OK] Missatge desxifrat a 'desxifrat.txt'")
+                     print(f"Text desxifrat: {mensaje_normal}")
+                     print()
+                 except FileNotFoundError:
+                     print("Error! Archivo xifrat.txt no encontrado")
+                     print("Primero debes cifrar un mensaje (opcion 1)")
+                     print()
+             except Exception as e:#Mas de lo mismo, si se rompe sale esto:
+                 print(f"Error! Algo salio mal durante el descifrado: {e}")
+                 print("")
                 
-        elif opcion == "3":#Falta opcion 3 de poder escoger el rotor y luego editarlo :)
-            a=1
+         elif opcion == "3":#Falta opcion 3 de poder escoger el rotor y luego editarlo :)
+             a=1
 
-        elif opcion == "4": #Terminado (se sale del menu y del programa)
-            print("Saliendo...")
-            break
+         elif opcion == "4": #Terminado (se sale del menu y del programa)
+             print("Saliendo...")
+             break
             
-        else:#Por si pone otra letra o numero
-            print("Opcion no valida. Por favor elige 1, 2, 3 o 4")
-            print("")
+         else:#Por si pone otra letra o numero
+             print("Opcion no valida. Por favor elige 1, 2, 3 o 4")
+             print("")
 
 main()
