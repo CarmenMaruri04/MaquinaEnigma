@@ -22,7 +22,7 @@ def cifrar_letra(letra, mapeo, posicion):#Funcion para cifrar letra
     return abecedario[indice_salida]
 
 
-def descifrar_letra(letra, mapeo, posicion): #Funci�n para descifrar la letra 
+def descifrar_letra(letra, mapeo, posicion): #Funcion para descifrar la letra 
     abecedario = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     indice = (abecedario.index(letra) + posicion) % 26
     inverso = [""] * 26  #Realizar el mapeo inverso (es decir, si A->E, entonces E->A  ^^)
@@ -55,15 +55,27 @@ def formatear_grupos(texto): #Divide el texto de 5 en 5
 
 
 
-a=1
+
+def cifrar_texto(texto, rotores, posiciones_iniciales): #Funcion para cifrar el texto ^^
+    abecedario = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    resultado = ""
+    posiciones = posiciones_iniciales.copy() #Se hace una copia para no perder las posiciones iniciales
+    for letra in texto:
+        if letra in abecedario:
+            posiciones = mover_rotores(posiciones, rotores) #Se mueven las ruedas antes de cifrar la letra
+            x = cifrar_letra(letra, rotores[0][0], posiciones[0])  #Rotor1
+            x = cifrar_letra(x, rotores[1][0], posiciones[1])      #Rotor2
+            x = cifrar_letra(x, rotores[2][0], posiciones[2])      #Rotor3
+            resultado += x
+    return resultado
 
 
 def main(): #Menu principal
     archivos_rotor = ["Rotor1.txt", "Rotor2.txt", "Rotor3.txt"] #3txt creados (1, 2, 3)
     configuraciones_ejemplo = [
-        "EKMFLGDQVZNTOWYHXUSPAIBRCJ\nG",  #Rotor 1 
-        "AJDKSIRUXBLHWTMCQGZNPYFVOE\nL",  #Rotor 2 
-        "BDFHJLCPRTXVZNYEIWGAKMUSQO\nC"   #Rotor 3 
+        "EKMFLGDQVZNTOWYHXUSPAIBRCJ\nG",  #Rotor1 
+        "AJDKSIRUXBLHWTMCQGZNPYFVOE\nL",  #Rotor2 
+        "BDFHJLCPRTXVZNYEIWGAKMUSQO\nC"   #Rotor3 
     ]
 
     for i, archivo in enumerate(archivos_rotor):
