@@ -22,7 +22,17 @@ def cifrar_letra(letra, mapeo, posicion):#Funcion para cifrar letra
     return abecedario[indice_salida]
 
 
-a=1
+
+def descifrar_letra(letra, mapeo, posicion): #Función para descifrar la letra 
+    abecedario = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    indice = (abecedario.index(letra) + posicion) % 26
+    inverso = [""] * 26  #Realizar el mapeo inverso (es decir, si A->E, entonces E->A  ^^)
+    for i in range(26):
+        inverso[abecedario.index(mapeo[i])] = abecedario[i]
+    mapeo_inverso = "".join(inverso) 
+    letra_cifrada = mapeo_inverso[indice]
+    indice_salida = (abecedario.index(letra_cifrada) - posicion) % 26
+    return abecedario[indice_salida]
 
 
 def main(): #Menu principal
