@@ -54,8 +54,6 @@ def formatear_grupos(texto): #Divide el texto de 5 en 5
     return resultado
 
 
-
-
 def cifrar_texto(texto, rotores, posiciones_iniciales): #Funcion para cifrar el texto ^^
     abecedario = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     resultado = ""
@@ -68,6 +66,26 @@ def cifrar_texto(texto, rotores, posiciones_iniciales): #Funcion para cifrar el 
             x = cifrar_letra(x, rotores[2][0], posiciones[2])      #Rotor3
             resultado += x
     return resultado
+
+
+def descifrar_texto(texto, rotores, posiciones_iniciales): #Funcion para descifrar el texto :)
+    abecedario = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    resultado = ""
+    posiciones = posiciones_iniciales.copy() #Copia las posiciones para no modificar las iniciales
+    texto_sin_espacios = "" #Modifica el texto quitando los espacios
+    for c in texto:
+        if c in abecedario:
+            texto_sin_espacios += c
+    for letra in texto_sin_espacios:
+        posiciones = mover_rotores(posiciones, rotores) #Se mueve el rotor para despues descifrar la letra (por lo tanto del 3 al 1)
+        x = descifrar_letra(letra, rotores[2][0], posiciones[2])  #Rotor3 
+        x = descifrar_letra(x, rotores[1][0], posiciones[1])      #Rotor2 
+        x = descifrar_letra(x, rotores[0][0], posiciones[0])      #Rotor1 
+        resultado += x
+    return resultado
+
+
+a=1
 
 
 def main(): #Menu principal
