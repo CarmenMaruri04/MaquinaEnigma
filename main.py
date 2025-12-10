@@ -13,6 +13,18 @@ def leer_rotor(nombre_archivo): #Funcion para leer rotor desde un archivo
         #Si no hay archivo, cada letra se transforma en ella misma (mapeo)
         return "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "Z"
 
+
+def cifrar_letra(letra, mapeo, posicion):#Funcion para cifrar letra
+    abecedario = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    indice = (abecedario.index(letra) + posicion) % 26 #Mira que numero es la letra
+    letra_cifrada = mapeo[indice] #Cifra usando el mapeo del rotor
+    indice_salida = (abecedario.index(letra_cifrada) - posicion) % 26 #Se converte de vuelta a la posicion normal
+    return abecedario[indice_salida]
+
+
+a=1
+
+
 def main(): #Menu principal
     archivos_rotor = ["Rotor1.txt", "Rotor2.txt", "Rotor3.txt"] #3txt creados (1, 2, 3)
     configuraciones_ejemplo = [
