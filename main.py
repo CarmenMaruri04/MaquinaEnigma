@@ -159,10 +159,10 @@ def main(): #Menu principal
             print(f"Creado archivo {archivo} con configuracion por defecto")
     while True: #Lo primero que se ve
          print("\n---- ENIGMA ----")
-         print("1. Xifrar missatge")
-         print("2. Desxifrar missatge")
-         print("3. Editar rotors")
-         print("4. Sortir")
+         print("1. Cifrar mensaje")
+         print("2. Descifrar mensaje")
+         print("3. Editar rotores")
+         print("4. Salir")
          opcion = input("> ")#Pongo esto q al profe le gusto :)
          print("")
          if opcion == "1":
@@ -196,7 +196,7 @@ def main(): #Menu principal
                      f.write(mensaje_formateado)
                  num_letras = len(mensaje_secreto)
                  num_grupos = (num_letras + 4) // 5
-                 print(f"[OK] Missatge xifrat a 'xifrat.txt' ({num_letras} lletres, {num_grupos} grups de 5)")
+                 print(f"[OK] Mensaje descifrado en 'xifrat.txt' ({num_letras} letras, {num_grupos} grups de 5)")
                  print(f"Text xifrat: {mensaje_formateado}")
                  print()
              except Exception as e: #Si algo no funciona en vez de que se rompa pues sale esto:
@@ -227,8 +227,8 @@ def main(): #Menu principal
                      mensaje_normal = descifrar_texto(texto_secreto, rotores, posiciones) #Descifra el mensaje
                      with open("desxifrat.txt", "w") as f:
                          f.write(mensaje_normal) #Guarda el mensaje normal
-                     print(f"[OK] Missatge desxifrat a 'desxifrat.txt'")
-                     print(f"Text desxifrat: {mensaje_normal}")
+                     print(f"[OK] Mensaje descifrado en 'desxifrat.txt'")
+                     print(f"Text descifrado: {mensaje_normal}")
                      print()
                  except FileNotFoundError:
                      print("Error! Archivo xifrat.txt no encontrado")
