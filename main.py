@@ -85,7 +85,61 @@ def descifrar_texto(texto, rotores, posiciones_iniciales): #Funcion para descifr
     return resultado
 
 
-a=1
+def editar_rotores():
+    print("\n---- EDITAR ROTORES ----")
+    while True:
+        print("Que rotor quieres editar?")
+        print("1. Rotor 1")
+        print("2. Rotor 2")
+        print("3. Rotor 3")
+        print("4. Volver al menu")
+        op = input("> ").strip()
+        if op == "4":
+            return
+        if op not in ["1", "2", "3"]: #Por si el usuario pone un numero o letra que no es
+            print("Opcion no valida")
+            continue
+        num_rotor = int(op)
+        archivo = f"Rotor{num_rotor}.txt"
+        print(f"\nConfiguracion actual de {archivo}:") #Muestra configuracion actual
+        try:
+            with open(archivo, "r") as f:
+                contenido = f.read()
+                print(contenido)
+        except:
+            print("Archivo no existe o no se puede leer") #Por si hay algun error
+        print("\n---- Nueva configuracion ----")
+        while True:
+            cableado = input("Cableado (26 letras A-Z sin repetir): ").upper().strip() #Se pide la nueva configuracion de letras
+            if len(cableado) != 26:
+                print("ERROR: Debe tener 26 letras")
+                continue
+            ok = True
+            letras_vistas = []
+            for c in cableado:
+                if c not in "ABCDEFGHIJKLMNOPQRSTUVWXYZ": #Por si el usuario pone una letra que no es o alguna otra cosa
+                    print(f"ERROR: '{c}' no es una letra valida") 
+                    ok = False
+                    break
+                if c in letras_vistas:
+                    print(f"ERROR: La letra '{c}' esta repetida")
+                    ok = False
+                    break
+                letras_vistas.append(c)
+            if ok:
+                break
+        while True:
+            notch = input("Notch (1 letra A-Z): ").upper().strip() #Pide la letra para el rotor
+            if len(notch) == 1 and notch in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+                break
+            print("ERROR: Debe ser una sola letra A-Z")
+        try:
+            with open(archivo, "w") as f: #Para guardar la nueva configuracion
+                f.write(cableado + "\n")
+                f.write(notch + "\n")
+            print(f"Rotor {num_rotor} actualizado correctamente")
+        except:
+            print(f"Error guardando {archivo}")
 
 
 def main(): #Menu principal
@@ -146,7 +200,7 @@ def main(): #Menu principal
                  print(f"Text xifrat: {mensaje_formateado}")
                  print()
              except Exception as e: #Si algo no funciona en vez de que se rompa pues sale esto:
-                 print(f"Ups! Algo salio mal: {e}")
+                 print(f"Error. Algo salio mal: {e}")
                  print()
          elif opcion == "2":
              try:
@@ -180,18 +234,18 @@ def main(): #Menu principal
                      print("Error! Archivo xifrat.txt no encontrado")
                      print("Primero debes cifrar un mensaje (opcion 1)")
                      print()
-             except Exception as e:#Mas de lo mismo, si se rompe sale esto:
+             except Exception as e: #Mas de lo mismo, si se rompe sale esto:
                  print(f"Error! Algo salio mal durante el descifrado: {e}")
                  print("")
                 
-         elif opcion == "3":#Falta opcion 3 de poder escoger el rotor y luego editarlo :)
-             a=1
+         elif opcion == "3": #Opcion de editar los rotores
+             editar_rotores()
 
-         elif opcion == "4": #Terminado (se sale del menu y del programa)
+         elif opcion == "4": #Terminado (se sale del menu)
              print("Saliendo...")
              break
             
-         else:#Por si pone otra letra o numero
+         else: #Por si pone otra letra o numero
              print("Opcion no valida. Por favor elige 1, 2, 3 o 4")
              print("")
 
